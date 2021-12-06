@@ -8,7 +8,7 @@ const WhiteBoard = () => {
     const drawRef = useRef(false);
     const prevRef = useRef({ prevX: -1, prevY: -1 });
     const [color, setColor] = useState(COLORS[0])
-    const [strokeWidth, setStrokeWidth] = useState(12)
+    const [strokeWidth] = useState(12)
 
     useEffect(() => {
         const canvas = ref.current;
@@ -19,7 +19,7 @@ const WhiteBoard = () => {
 
     const onResize = (evt, data) => {
         console.log({ evt, data })
-        const canvas = ref.current;
+        // const canvas = ref.current;
         // canvas.setWidth(window.innerWidth);
         // canvas.height = window.innerHeight;
     }
