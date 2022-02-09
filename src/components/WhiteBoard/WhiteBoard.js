@@ -1,14 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import './whiteboard.css';
+// import ColorPicker from '../ColorPicker/ColorPicker';
+import './WhiteBoard.scss';
 
 const COLORS = ['#2f2f2f', '#f05f50', '#2ffa8f', '#5050ff', '#ffff80'];
+const STROKES = [2, 4, 8, 12, 14];
 
 const WhiteBoard = () => {
     const ref = useRef();
     const drawRef = useRef(false);
     const prevRef = useRef({ prevX: -1, prevY: -1 });
     const [color, setColor] = useState(COLORS[0])
-    const [strokeWidth] = useState(12)
+    const [strokeWidth, setStrokeWidth] = useState(STROKES[1])
 
     useEffect(() => {
         const canvas = ref.current;
@@ -24,25 +26,38 @@ const WhiteBoard = () => {
         // canvas.height = window.innerHeight;
     }
 
+    const drawLine = ({ clientX, clientY }) => {
+        const canvas = ref.current;
+        let prevData = prevRef.current;
+        var ctx = canvas.getContext("2d");
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = strokeWidth;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        if (prevData.prevX !== -1 && prevData.prevY !== -1) {
+            ctx.moveTo(prevData.prevX, prevData.prevY);
+        } else {
+            ctx.moveTo(clientX, clientY);
+        }
+        ctx.lineTo(clientX, clientY);
+        ctx.stroke();
+        prevRef.current = { prevX: clientX, prevY: clientY };
+    }
+
+    const drawRectangle = ({ clientX, clientY }) => {
+        const canvas = ref.current;
+        var ctx = canvas.getContext("2d");
+        ctx.beginPath();
+        ctx.rect(clientX, clientY, 150, 150);
+        ctx.stroke();
+    }
+
     const onMouseMove = ({ clientX, clientY }) => {
         if (drawRef.current) {
-            const canvas = ref.current;
-            let prevData = prevRef.current;
-            var ctx = canvas.getContext("2d");
-            ctx.beginPath();
-            ctx.strokeStyle = color;
-            ctx.lineWidth = strokeWidth;
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-
-            if (prevData.prevX !== -1 && prevData.prevY !== -1) {
-                ctx.moveTo(prevData.prevX, prevData.prevY);
-            } else {
-                ctx.moveTo(clientX, clientY);
-            }
-            ctx.lineTo(clientX, clientY);
-            ctx.stroke();
-            prevRef.current = { prevX: clientX, prevY: clientY };
+            drawLine({ clientX, clientY })
+            // drawRectangle({ clientX, clientY })
         }
     }
 
@@ -64,6 +79,14 @@ const WhiteBoard = () => {
                 {
                     COLORS.map((color) => (
                         <div className="color" style={{ backgroundColor: color }} onClick={() => setColor(color)} />
+                    ))
+                }
+            </div>
+            {/* <ColorPicker /> */}
+            <div className="strokes">
+                {
+                    STROKES.map((stroke) => (
+                        <div className={`stroke ${strokeWidth===stroke? 'active' : ''}`} style={{ height: stroke, backgroundColor: 'black' }} onClick={() => setStrokeWidth(stroke)} />
                     ))
                 }
             </div>
