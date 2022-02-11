@@ -138,7 +138,7 @@ const WhiteBoard = () => {
     }
 
     const drawShape = (event) => {
-        const { clientX, clientY } = event?.changedTouches?.[0] || event;
+        const { clientX, clientY } = event?.touches?.[0] || event;
         if (drawRef.current) {
             console.log('drawing', { clientX, clientY });
             const canvas = canvasRef.current;
