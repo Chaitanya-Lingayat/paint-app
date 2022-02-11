@@ -22,8 +22,14 @@ const WhiteBoard = () => {
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // const isMobileDevice = /Mobi/i.test(window.navigator.userAgent)
+        // if (isMobileDevice) {
+        //     canvas.width = window.outerWidth;
+        //     canvas.height = window.outerHeight;
+        // } else {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        // }
         window.addEventListener('resize', onResize)
     }, [])
 
@@ -40,7 +46,7 @@ const WhiteBoard = () => {
 
 
     const onResize = (evt, data) => {
-        console.log({ evt, data })
+        // console.log({ evt, data })
         // const canvas = canvasRef.current;
         // canvas.width = window.innerWidth;
         // canvas.height = window.innerHeight;
@@ -140,7 +146,7 @@ const WhiteBoard = () => {
     const drawShape = (event) => {
         const { clientX, clientY } = event?.touches?.[0] || event;
         if (drawRef.current) {
-            console.log('drawing', { clientX, clientY });
+            // console.log('drawing', { clientX, clientY });
             const canvas = canvasRef.current;
             const ctx = ctxRef.current;
             let prevData = prevRef.current;
@@ -166,6 +172,7 @@ const WhiteBoard = () => {
 
             }
         }
+        // event.nativeEvent.preventDefault();
     }
 
     const startDrawing = () => {
@@ -175,10 +182,11 @@ const WhiteBoard = () => {
     }
 
     const stopDrawing = (event) => {
+        event.preventDefault();
         const { clientX, clientY } = event?.changedTouches?.[0] || event;
         if (shapeType === SHAPE_TYPES.RECTANGLE) {
             setPreviousPosition({ clientX, clientY });
-            console.log({ prevRef: prevRef.current })
+            // console.log({ prevRef: prevRef.current })
         }
         drawRef.current = false;
         prevRef.current = { prevX: -1, prevY: -1 };
