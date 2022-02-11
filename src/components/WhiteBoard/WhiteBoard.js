@@ -137,8 +137,10 @@ const WhiteBoard = () => {
         });
     }
 
-    const drawShape = ({ clientX, clientY }) => {
+    const drawShape = (event) => {
+        const { clientX, clientY } = event?.changedTouches?.[0] || event;
         if (drawRef.current) {
+            console.log('drawing', { clientX, clientY });
             const canvas = canvasRef.current;
             const ctx = ctxRef.current;
             let prevData = prevRef.current;
@@ -172,7 +174,8 @@ const WhiteBoard = () => {
         console.log('start drawing')
     }
 
-    const stopDrawing = ({ clientX, clientY }) => {
+    const stopDrawing = (event) => {
+        const { clientX, clientY } = event?.changedTouches?.[0] || event;
         if (shapeType === SHAPE_TYPES.RECTANGLE) {
             setPreviousPosition({ clientX, clientY });
             console.log({ prevRef: prevRef.current })
@@ -194,7 +197,15 @@ const WhiteBoard = () => {
     }
 
     return <div className="canvas">
-        <canvas ref={canvasRef} onMouseMove={drawShape} onMouseDown={startDrawing} onMouseUp={stopDrawing}>
+        <canvas
+            ref={canvasRef}
+            onMouseDown={startDrawing}
+            onMouseMove={drawShape}
+            onMouseUp={stopDrawing}
+            onTouchStart={startDrawing}
+            onTouchMove={drawShape}
+            onTouchEnd={stopDrawing}
+        >
             Your browser does not support the canvas element.
         </canvas>
         <div className="header">
